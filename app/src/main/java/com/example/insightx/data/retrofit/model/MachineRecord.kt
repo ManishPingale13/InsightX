@@ -1,6 +1,6 @@
 package com.example.insightx.data.retrofit.model
 
-data class MachineRecord(
+data class Record(
     val id: Int? = null,
     val machine_name: String?,
     val user: String?,
@@ -12,4 +12,8 @@ data class MachineRecord(
     val tool_wear: Int?,
     val quality: Int?,
     val predictions: List<List<Double>>? = null
+)
+
+data class MachineRecord(
+    val records:List<Record>, val errorMessage: String
 )
