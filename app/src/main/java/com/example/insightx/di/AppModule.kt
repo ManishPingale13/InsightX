@@ -1,12 +1,15 @@
 package com.example.insightx.di
 
+import android.content.Context
 import com.example.insightx.data.retrofit.api.AuthApi
 import com.example.insightx.data.retrofit.api.MachineRecordApi
 import com.example.insightx.data.retrofit.repository.AuthRepoImpl
 import com.example.insightx.data.retrofit.repository.MachineRecordRepoImpl
+import com.example.insightx.util.DataStoreRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -55,5 +58,10 @@ object AppModule {
     @Singleton
     fun provideAuthRepo(authApi: AuthApi): AuthRepoImpl =
         AuthRepoImpl(authApi)
+
+    @Provides
+    @Singleton
+    fun provideDataStoreRepo(@ApplicationContext app: Context): DataStoreRepository =
+        DataStoreRepository(app)
 
 }

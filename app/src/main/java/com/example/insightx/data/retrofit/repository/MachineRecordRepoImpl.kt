@@ -11,17 +11,11 @@ class MachineRecordRepoImpl(
     private val recordApi: MachineRecordApi
 ) {
 
-    private fun getHeaderMap(user: String, pass: String): Map<String, String> {
-        val headerMap = mutableMapOf<String, String>()
-        headerMap["user"] = user
-        headerMap["pass"] = pass
-        return headerMap
-    }
 
-    suspend fun getAllMachineRecords() =
+    suspend fun getAllMachineRecords(creds: Map<String, String>) =
         flow {
             emit(NetworkResult.Loading())
-            val response = recordApi.getRecords(getHeaderMap("admin", "admin"))
+            val response = recordApi.getRecords(creds)
             if (response.isSuccessful)
                 emit(NetworkResult.Success(response.body()))
             else

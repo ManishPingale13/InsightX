@@ -6,14 +6,14 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
-private val Context.dataStore: DataStore<Preferences>
-        by preferencesDataStore("auth_prefs")
-class AuthManager(private val context: Context) {
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("auth_prefs")
 
-
+class DataStoreRepository @Inject constructor(
+    private val context: Context
+) {
     companion object {
         val USER_NAME_KEY = stringPreferencesKey("USER_AGE")
         val USER_PASS_KEY = stringPreferencesKey("USER_PASS")
@@ -26,15 +26,11 @@ class AuthManager(private val context: Context) {
         }
     }
 
-    val credsFlow: Flow<Map<String?, String?>> = context.dataStore.data.map { prefs ->
-        val headerMap = mutableMapOf<String?, String?>()
-        headerMap["USER"] = prefs[USER_NAME_KEY]
-        headerMap["PASS"] = prefs[USER_PASS_KEY]
-        headerMap
+    suspend fun getUser(): String? {
+        return context.dataStore.data.first()[USER_NAME_KEY]
     }
 
-    val passFlow: Flow<String?> = context.dataStore.data.map { prefs ->
-        prefs[USER_PASS_KEY]
+    suspend fun getPass(): String? {
+        return context.dataStore.data.first()[USER_PASS_KEY]
     }
-
 }

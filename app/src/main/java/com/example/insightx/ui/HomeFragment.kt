@@ -5,48 +5,45 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.insightx.R
 import com.example.insightx.data.retrofit.NetworkResult
 import com.example.insightx.databinding.FragmentHomeBinding
-import com.example.insightx.util.AuthManager
+import com.example.insightx.util.DataStoreRepository
 import com.example.insightx.viewmodel.MachineRecordViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel by viewModels<MachineRecordViewModel>()
-    lateinit var authManager: AuthManager
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var navController: NavController
+
+    @Inject
+    lateinit var dataStoreRepo: DataStoreRepository
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        authenticationStatus()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentHomeBinding.bind(view)
-        Log.d("TAG", "onViewCreated: IN HOME!")
         navController = Navigation.findNavController(view)
-        authenticationStatus()
         subscribeToData()
-
     }
 
     private fun authenticationStatus() {
-        authManager = AuthManager(requireContext())
-
-        this.authManager.credsFlow.asLiveData().observe(this) { creds ->
-            if (creds["USER"].isNullOrEmpty() || creds["PASS"].isNullOrEmpty()) {
-                Log.d("TAG", "authenticationStatus: ${creds["USER"]}")
-                Log.d("TAG", "authenticationStatus: ${creds["PASS"]}")
+        lifecycleScope.launch {
+            if (dataStoreRepo.getPass() == null || dataStoreRepo.getUser() == null)
                 navController.navigate(R.id.action_homeFragment_to_loginFragment)
-            } else {
-                Log.d("TAG", "authenticationStatus: NOT NULL")
-                Log.d("TAG", "authenticationStatus: ${creds["USER"]}")
-                Log.d("TAG", "authenticationStatus: ${creds["PASS"]}")
-            }
         }
     }
 
