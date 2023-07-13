@@ -1,9 +1,9 @@
 package com.example.insightx.data.retrofit.repository
 
-import android.util.Log
 import com.example.insightx.data.retrofit.NetworkResult
 import com.example.insightx.data.retrofit.api.MachineRecordApi
-import com.example.insightx.data.retrofit.model.MachineRecord
+import com.example.insightx.data.retrofit.model.Record
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
@@ -18,24 +18,50 @@ class MachineRecordRepoImpl(
         return headerMap
     }
 
-    suspend fun getMachineRecords() =
-//        (MachineRecordDataSource(recordApi).invoke())
+    suspend fun getAllMachineRecords() =
         flow {
             emit(NetworkResult.Loading())
             val response = recordApi.getRecords(getHeaderMap("admin", "admin"))
-            Log.d("TAG-1", "getMachineRecords: Data:  ${response.body()}")
             if (response.isSuccessful)
                 emit(NetworkResult.Success(response.body()))
             else
                 emit(NetworkResult.Error(response.message()))
         }.catch { e ->
-            Log.d("TAG-2", "getMachineRecords: IN CATCH ${e.message}")
-            emit(NetworkResult.Error(e.message ?: "Some error occurred"))
+            emit(NetworkResult.Error(e.message ?: "Something went wrong"))
         }
 
-    suspend fun getMachineRecord(recordId: Int) = recordApi.getRecord(recordId)
+    suspend fun getMachineRecordById(recordId: Int) =
+        flow {
+            emit(NetworkResult.Loading())
+            val response = recordApi.getRecord(recordId)
+            if (response.isSuccessful)
+                emit(NetworkResult.Success(response.body()))
+            else
+                emit(NetworkResult.Error(response.message()))
+        }.catch { e ->
+            emit(NetworkResult.Error(e.message ?: "Something went wrong"))
+        }
 
-    suspend fun deleteMachineRecord(recordId: Int) = recordApi.deleteRecord(recordId)
+    suspend fun deleteMachineRecordById(recordId: Int): Flow<NetworkResult<String>> = flow {
+        emit(NetworkResult.Loading())
+        val response = recordApi.deleteRecord(recordId)
+        if (response.isSuccessful)
+            emit(NetworkResult.Success(response.body()))
+        else
+            emit(NetworkResult.Error(response.message()))
+    }.catch { e ->
+        emit(NetworkResult.Error(e.message ?: "Something went wrong"))
+    }
 
-    suspend fun addMachineRecord(record: MachineRecord) = recordApi.addRecord(record)
+    suspend fun addMachineRecord(record: Record): Flow<NetworkResult<Record>> = flow {
+        emit(NetworkResult.Loading())
+        val response = recordApi.addRecord(record)
+        if (response.isSuccessful)
+            emit(NetworkResult.Success(response.body()!!))
+        else
+            emit(NetworkResult.Error(response.message()))
+    }.catch { e ->
+        emit(NetworkResult.Error(e.message ?: "Something went wrong"))
+    }
 }
+

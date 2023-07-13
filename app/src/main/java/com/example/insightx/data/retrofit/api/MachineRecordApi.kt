@@ -1,6 +1,5 @@
 package com.example.insightx.data.retrofit.api
 
-import com.example.insightx.data.retrofit.model.MachineRecord
 import com.example.insightx.data.retrofit.model.Record
 import retrofit2.Response
 import retrofit2.http.*
@@ -15,21 +14,17 @@ interface MachineRecordApi {
     suspend fun getRecords(@HeaderMap headers: Map<String, String>): Response<List<Record>>
 
     @POST("records")
-    suspend fun addRecord(@Body record: MachineRecord): MachineRecord
+    suspend fun addRecord(@Body record: Record): Response<Record>
 
     @GET("records/{id}")
-    suspend fun getRecord(@Path("id") id: Int): MachineRecord
+    suspend fun getRecord(@Path("id") id: Int): Response<Record>
 
     @DELETE("records/{id}")
     suspend fun deleteRecord(@Path("id") id: Int): Response<String>
 }
-//
-//class MachineRecordDataSource(
-//    private val machineRecordApi: MachineRecordApi
-//) {
-//    private suspend fun <T : Any> handleApi(
-//        execute: suspend () -> Response<T>
-//    ): NetworkResult<T> {
+
+//    :
+//    NetworkResult<T> {
 //        return try {
 //            val response = execute()
 //            val body = response.body()
@@ -42,10 +37,9 @@ interface MachineRecordApi {
 //            NetworkResult.Error(message = e.message!!)
 //        }
 //    }
-//
-//    suspend operator fun invoke() =
-//        handleApi { machineRecordApi.getRecords(getHeaderMap("admin", "admin")) }
-//
+//}
+
+
 //    private fun getHeaderMap(user: String, pass: String): Map<String, String> {
 //        val headerMap = mutableMapOf<String, String>()
 //        headerMap["user"] = user
