@@ -9,9 +9,16 @@ interface AuthApi {
 
     @POST("login")
     @FormUrlEncoded
-    suspend fun loginUser(@Field("loginusername") user:String, @Field("loginpass") pass:String): Response<String>
+    suspend fun loginUser(
+        @Field("loginusername") user: String,
+        @Field("loginpass") pass: String
+    ): Response<String>
 
     @POST("signup")
     @FormUrlEncoded
-    suspend fun signupUser(@Field("name") name:String, @Field("email") email:String,@Field("pass1") pass:String): Response<String>
+    suspend fun signupUser(
+        @Field("name") name: String,
+        @Field("email") email: String,
+        @Field("pass1") pass: String
+    ): Response<String>
 }

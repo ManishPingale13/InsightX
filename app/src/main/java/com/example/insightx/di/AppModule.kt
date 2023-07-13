@@ -56,8 +56,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepo(authApi: AuthApi): AuthRepoImpl =
-        AuthRepoImpl(authApi)
+    fun provideAuthRepo(authApi: AuthApi, dataStoreRepo: DataStoreRepository): AuthRepoImpl =
+        AuthRepoImpl(authApi, dataStoreRepo)
 
     @Provides
     @Singleton

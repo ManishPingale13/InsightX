@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MachineRecordViewModel @Inject constructor(
     private val recordRepo: MachineRecordRepoImpl,
-//    private val authRepo: AuthRepoImpl,
+    private val authRepo: AuthRepoImpl,
     private val dataStoreRepo: DataStoreRepository
 ) : ViewModel() {
     private val _recordLiveData = MutableLiveData<NetworkResult<List<Record>>>()
@@ -24,22 +24,20 @@ class MachineRecordViewModel @Inject constructor(
 
 //    private val _newRecord = MutableLiveData<NetworkResult<Record>>()
 //    val newRecord: LiveData<NetworkResult<Record>> = _newRecord
-//
-//    private val _response = MutableLiveData<NetworkResult<String>>()
-//    val response: LiveData<NetworkResult<String>> = _response
+
 
     init {
         viewModelScope.launch {
             val user = dataStoreRepo.getUser()
             val pass = dataStoreRepo.getPass()
-            if (user != null && pass != null) recordRepo.getAllMachineRecords(
-                getHeaderMap(user, pass)
-            ).collect {
-                _recordLiveData.postValue(it)
-            }
+            if (user != null && pass != null)
+                recordRepo.getAllMachineRecords(
+                    getHeaderMap(user, pass)
+                ).collect {
+                    _recordLiveData.postValue(it)
+                }
         }
     }
-
 
     private fun getHeaderMap(user: String, pass: String): Map<String, String> {
         val headerMap = mutableMapOf<String, String>()
@@ -49,12 +47,3 @@ class MachineRecordViewModel @Inject constructor(
     }
 
 }
-
-//
-//    suspend fun getSingleRecord(id: Int): Flow<NetworkResult<Record>> {
-//        return recordRepo.getMachineRecordById(id)
-//    }
-//
-//
-
-//}
