@@ -38,13 +38,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         subscribeToUi()
 
-        binding.registerBtn.setOnClickListener {
-            navController.navigate(R.id.action_loginFragment_to_registerFragment)
-        }
-
-        binding.login.setOnClickListener {
-            viewModel.login("admin1", "admin3@gmail.com")
-        }
+//        binding.registerBtn.setOnClickListener {
+//            navController.navigate(R.id.action_loginFragment_to_registerFragment)
+//        }
+//
+//        binding.login.setOnClickListener {
+//            viewModel.login("admin", "admin")
+//        }
     }
 
     private fun subscribeToUi() {
