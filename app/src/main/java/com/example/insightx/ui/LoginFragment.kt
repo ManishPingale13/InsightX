@@ -38,13 +38,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         subscribeToUi()
 
-//        binding.registerBtn.setOnClickListener {
-//            navController.navigate(R.id.action_loginFragment_to_registerFragment)
-//        }
-//
-//        binding.login.setOnClickListener {
-//            viewModel.login("admin", "admin")
-//        }
+        binding.btnLoginLg.setOnClickListener {
+            val email = binding.logEmailEdit.text
+            val pass = binding.logPassEdit.text
+
+            if (email?.isNotBlank() == true && pass?.isNotBlank() == true) {
+                viewModel.login(email.toString(), pass.toString())
+            }else{
+                Toast.makeText(context,"Enter all fields",Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun subscribeToUi() {

@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface MachineRecordApi {
     companion object {
-        const val BASE_URL = "http://192.168.2.103:80/api/"
+        const val BASE_URL = "http://192.168.2.100/api/"
     }
 
     @GET("records")

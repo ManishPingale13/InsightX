@@ -19,36 +19,14 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="12dp">
 
-            <ImageView
-                android:id="@+id/bk_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_back" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="1dp"
-                android:layout_marginTop="11dp"
-                android:layout_toEndOf="@+id/bk_img"
-                android:fontFamily="@font/montserratregular"
-                android:gravity="center_horizontal"
-                android:text="Back"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
 
         </RelativeLayout>
 
         <ImageView
             android:id="@+id/lg_preview_logo"
             android:layout_width="170dp"
-
             android:layout_height="170dp"
-            android:layout_marginStart="-10dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="60dp" />
 
         <TextView
@@ -149,22 +127,6 @@
             android:textColor="@color/white"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/forgotpass_log"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/log_pass_edit_lay"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="11dp"
-            android:layout_marginEnd="31dp"
-            android:layout_marginRight="20dp"
-            android:fontFamily="@font/montserratregular"
-            android:gravity="center_horizontal"
-            android:text="Forgot Password?"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="12sp" />
 
         <RelativeLayout
             android:id="@+id/home_no_account_log"
@@ -175,30 +137,6 @@
             android:layout_marginTop="30dp"
             android:gravity="center|bottom">
 
-            <TextView
-                android:id="@+id/lev1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/montserratsemibold"
-                android:gravity="center"
-                android:text="Don't have an account?"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/lev2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="20dp"
-                android:layout_toEndOf="@id/lev1"
-                android:fontFamily="@font/montserratsemibold"
-                android:gravity="center"
-                android:text="Sign up"
-                android:textColor="@color/blue"
-                android:textSize="12sp" />
 
         </RelativeLayout>
 
