@@ -1,7 +1,6 @@
 package com.example.insightx.ui
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,13 +10,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.insightx.R
 import com.example.insightx.adapters.RecordAdapter
 import com.example.insightx.data.retrofit.NetworkResult
+import com.example.insightx.data.retrofit.model.Record
 import com.example.insightx.databinding.FragmentHomeBinding
 import com.example.insightx.util.DataStoreRepository
 import com.example.insightx.viewmodel.MachineRecordViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +42,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     @Inject
     lateinit var dataStoreRepo: DataStoreRepository
     private val viewModel by viewModels<MachineRecordViewModel>()
+    var recordList: MutableList<Record>? = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,10 +58,73 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         recordAdapter = context?.let { RecordAdapter(it) }!!
 
         init()
+        callbackInit()
 //        subscribeToData()
     }
 
+    private fun callbackInit() {
+        val itemTouchHelperCallback =
+            object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ) = false
 
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val position = viewHolder.adapterPosition
+                    val removedItem = recordList!!.removeAt(position)
+                    recordAdapter.notifyItemRemoved(position)
+
+                    Snackbar.make(
+                        binding.recordRecyclerView, "Record deleted", Snackbar.LENGTH_SHORT
+                    ).setAction("Undo") {
+                        recordList!!.add(position, removedItem)
+                        recordAdapter.notifyItemInserted(position)
+                    }.addCallback(object : Snackbar.Callback() {
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            super.onDismissed(transientBottomBar, event)
+                            if (event == DISMISS_EVENT_TIMEOUT
+                                || event == DISMISS_EVENT_CONSECUTIVE
+                                || event == DISMISS_EVENT_SWIPE
+                            ) {
+                                deleteRequest(position, removedItem)
+                            }
+                        }
+                    }).show()
+
+                }
+            }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recordRecyclerView)
+    }
+
+    private fun deleteRequest(pos: Int, removedItem: Record) {
+        viewModel.deleteRecord(removedItem)
+        viewModel.reqStatus.observe(viewLifecycleOwner) {
+            when (it) {
+                "ERROR" -> {
+                    if (!recordList!!.contains(removedItem)) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Failed to delete record",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        recordList!!.add(pos, removedItem)
+                        recordAdapter.notifyItemInserted(pos)
+                    }
+
+                }
+                "LOADING" -> {
+                    Log.d("TAG", "deleteRequest: LOADING......")
+                }
+                "SUCCESS" -> {
+                    Log.d("TAG", "deleteRequest: DELETED!!!")
+                }
+            }
+        }
+
+    }
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -71,6 +138,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
+        fetchRecords()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun fetchRecords() {
         viewModel.records.observe(viewLifecycleOwner) {
             when (it) {
                 is NetworkResult.Error -> {
@@ -80,6 +152,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     Log.d("TAG", "init: LOADING....")
                 }
                 is NetworkResult.Success -> {
+                    recordList = it.data as MutableList<Record>?
                     recordAdapter.submitList(it.data)
                     recordAdapter.notifyDataSetChanged()
                 }
@@ -89,26 +162,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun authenticationStatus() {
         lifecycleScope.launch {
-            if (dataStoreRepo.getPass() == null || dataStoreRepo.getUser() == null)
-                navController.navigate(R.id.action_homeFragment_to_loginFragment)
+            if (dataStoreRepo.getPass() == null || dataStoreRepo.getUser() == null) navController.navigate(
+                R.id.action_homeFragment_to_loginFragment
+            )
         }
     }
 
-    private fun subscribeToData() {
-        viewModel.records.observe(viewLifecycleOwner) {
-            when (it) {
-                is NetworkResult.Error -> {
-                    Log.e("TAG", "subscribeToData: ${it.message}")
-                }
-                is NetworkResult.Loading -> {
-                    Log.d("TAG", "subscribeToData: Loading....")
-                }
-                is NetworkResult.Success -> {
-                    Log.d("TAG", "subscribeToData: ${it.data}")
-                }
-            }
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

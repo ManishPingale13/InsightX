@@ -19,11 +19,12 @@ class MachineRecordViewModel @Inject constructor(
     private val authRepo: AuthRepoImpl,
     private val dataStoreRepo: DataStoreRepository
 ) : ViewModel() {
+
     private val _recordLiveData = MutableLiveData<NetworkResult<List<Record>>>()
     val records: LiveData<NetworkResult<List<Record>>> = _recordLiveData
 
-//    private val _newRecord = MutableLiveData<NetworkResult<Record>>()
-//    val newRecord: LiveData<NetworkResult<Record>> = _newRecord
+    private val _reqStatus = MutableLiveData<String>()
+    val reqStatus: LiveData<String> = _reqStatus
 
 
     init {
@@ -46,4 +47,22 @@ class MachineRecordViewModel @Inject constructor(
         return headerMap
     }
 
+    fun deleteRecord(removedItem: Record) {
+
+        viewModelScope.launch {
+            recordRepo.deleteMachineRecordById(removedItem.id!!).collect {
+                when (it) {
+                    is NetworkResult.Error ->
+                        _reqStatus.postValue("ERROR")
+
+                    is NetworkResult.Loading ->
+                        _reqStatus.postValue("LOADING")
+
+                    is NetworkResult.Success ->
+                        _reqStatus.postValue("SUCCESS")
+
+                }
+            }
+        }
+    }
 }

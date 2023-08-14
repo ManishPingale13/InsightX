@@ -20,23 +20,23 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+//
+//    @Provides
+//    @Singleton
+//    fun providesHttpClient(): OkHttpClient =
+//        OkHttpClient.Builder()
+////            .connectTimeout(15, TimeUnit.SECONDS)
+////            .readTimeout(15, TimeUnit.SECONDS)
+////            .writeTimeout(15, TimeUnit.SECONDS)
+//            .build()
+
 
     @Provides
     @Singleton
-    fun providesHttpClient(): OkHttpClient =
-        OkHttpClient.Builder()
-//            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .build()
-
-
-    @Provides
-    @Singleton
-    fun provideRetrofit(client: OkHttpClient): Retrofit =
+    fun provideRetrofit(): Retrofit =
         Retrofit.Builder().baseUrl(MachineRecordApi.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
+//            .client(client)
             .build()
 
     @Singleton
