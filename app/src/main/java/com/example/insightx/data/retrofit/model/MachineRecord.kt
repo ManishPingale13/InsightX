@@ -11,9 +11,10 @@ data class Record(
     val torque: Int?,
     val tool_wear: Int?,
     val quality: Int?,
-    val predictions: List<List<Double>>? = null
+    val predictions: List<List<Double>>? = null,
+    val status: String?
 )
 
 data class MachineRecord(
-    val records:List<Record>, val errorMessage: String
+    val records: List<Record>, val errorMessage: String
 )

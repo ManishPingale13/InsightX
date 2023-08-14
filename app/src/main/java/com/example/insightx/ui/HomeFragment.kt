@@ -1,14 +1,19 @@
 package com.example.insightx.ui
 
+import android.annotation.SuppressLint
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.insightx.R
+import com.example.insightx.adapters.RecordAdapter
 import com.example.insightx.data.retrofit.NetworkResult
 import com.example.insightx.databinding.FragmentHomeBinding
 import com.example.insightx.util.DataStoreRepository
@@ -19,13 +24,22 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
-    private val viewModel by viewModels<MachineRecordViewModel>()
+
+    //UI
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    //Navigation
     private lateinit var navController: NavController
 
+    //Recycler View
+    private lateinit var recordAdapter: RecordAdapter
+
+    //Data
     @Inject
     lateinit var dataStoreRepo: DataStoreRepository
+    private val viewModel by viewModels<MachineRecordViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +51,40 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         _binding = FragmentHomeBinding.bind(view)
         navController = Navigation.findNavController(view)
-        subscribeToData()
+        recordAdapter = context?.let { RecordAdapter(it) }!!
+
+        init()
+//        subscribeToData()
+    }
+
+
+
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun init() {
+
+        binding.apply {
+            recordRecyclerView.apply {
+                adapter = recordAdapter
+                layoutManager = LinearLayoutManager(context)
+                setHasFixedSize(true)
+            }
+        }
+
+        viewModel.records.observe(viewLifecycleOwner) {
+            when (it) {
+                is NetworkResult.Error -> {
+                    Toast.makeText(context, "Error Occurred", Toast.LENGTH_SHORT).show()
+                }
+                is NetworkResult.Loading -> {
+                    Log.d("TAG", "init: LOADING....")
+                }
+                is NetworkResult.Success -> {
+                    recordAdapter.submitList(it.data)
+                    recordAdapter.notifyDataSetChanged()
+                }
+            }
+        }
     }
 
     private fun authenticationStatus() {
