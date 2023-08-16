@@ -5,14 +5,15 @@ data class Record(
     val machine_name: String?,
     val user: String?,
     val password: String?,
-    val air_temp: Int?,
-    val process_temp: Int?,
-    val rotational_speed: Int?,
-    val torque: Int?,
-    val tool_wear: Int?,
+    val air_temp: Double?,
+    val process_temp: Double?,
+    val rotational_speed: Double?,
+    val torque: Double?,
+    val tool_wear: Double?,
     val quality: Int?,
     val predictions: List<List<Double>>? = null,
-    val status: String?
+    val status: String?,
+    val model:String?
 )
 
 data class MachineRecord(

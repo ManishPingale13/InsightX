@@ -57,6 +57,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         navController = Navigation.findNavController(view)
         recordAdapter = context?.let { RecordAdapter(it) }!!
 
+        binding.refreshContainer.setOnRefreshListener {
+            viewModel.fetchMachineRecords()
+        }
+
+        binding.fabRecord.setOnClickListener {
+            navController.navigate(R.id.action_homeFragment_to_recordFragment)
+        }
+
         init()
         callbackInit()
 //        subscribeToData()
@@ -101,7 +109,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun deleteRequest(pos: Int, removedItem: Record) {
         viewModel.deleteRecord(removedItem)
-        viewModel.reqStatus.observe(viewLifecycleOwner) {
+        viewModel.delReqStatus.observe(viewLifecycleOwner) {
             when (it) {
                 "ERROR" -> {
                     if (!recordList!!.contains(removedItem)) {
@@ -146,12 +154,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewModel.records.observe(viewLifecycleOwner) {
             when (it) {
                 is NetworkResult.Error -> {
+                    binding.progressBarRecords.visibility = View.INVISIBLE
+                    binding.refreshContainer.isRefreshing = false
                     Toast.makeText(context, "Error Occurred", Toast.LENGTH_SHORT).show()
                 }
                 is NetworkResult.Loading -> {
-                    Log.d("TAG", "init: LOADING....")
+                    binding.progressBarRecords.visibility = View.VISIBLE
                 }
                 is NetworkResult.Success -> {
+                    binding.progressBarRecords.visibility = View.INVISIBLE
+                    binding.refreshContainer.isRefreshing = false
                     recordList = it.data as MutableList<Record>?
                     recordAdapter.submitList(it.data)
                     recordAdapter.notifyDataSetChanged()
@@ -162,9 +174,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun authenticationStatus() {
         lifecycleScope.launch {
-            if (dataStoreRepo.getPass() == null || dataStoreRepo.getUser() == null) navController.navigate(
-                R.id.action_homeFragment_to_loginFragment
-            )
+            if (dataStoreRepo.getPass() == null || dataStoreRepo.getUser() == null)
+                navController.navigate(
+                    R.id.action_homeFragment_to_loginFragment
+                )
         }
     }
 
@@ -173,4 +186,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onDestroyView()
         _binding = null
     }
+
+
 }
