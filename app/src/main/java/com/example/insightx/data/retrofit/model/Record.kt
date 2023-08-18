@@ -1,5 +1,9 @@
 package com.example.insightx.data.retrofit.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Record(
     val id: Int? = null,
     val machine_name: String?,
@@ -13,9 +17,5 @@ data class Record(
     val quality: Int?,
     val predictions: List<List<Double>>? = null,
     val status: String?,
-    val model:String?
-)
-
-data class MachineRecord(
-    val records: List<Record>, val errorMessage: String
-)
+    val model: String?
+):Parcelable

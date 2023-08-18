@@ -55,7 +55,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         _binding = FragmentHomeBinding.bind(view)
         navController = Navigation.findNavController(view)
-        recordAdapter = context?.let { RecordAdapter(it) }!!
+        recordAdapter = RecordAdapter(requireContext()) {
+            val action = RecordFragmentDirections.actionRecordFragmentToDashboardFragment(it)
+            navController.navigate(action)
+        }
 
         binding.refreshContainer.setOnRefreshListener {
             viewModel.fetchMachineRecords()

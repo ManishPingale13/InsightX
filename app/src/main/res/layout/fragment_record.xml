@@ -130,10 +130,10 @@
         android:id="@+id/predict_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:indeterminate="true"
         android:visibility="invisible"
-        android:layout_centerInParent="true"
         app:indicatorColor="@color/purple_500"
         app:indicatorSize="50dp"
         app:trackThickness="5dp" />
