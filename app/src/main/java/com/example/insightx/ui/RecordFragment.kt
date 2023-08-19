@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.example.insightx.R
 import com.example.insightx.databinding.FragmentRecordBinding
 import com.example.insightx.viewmodel.MachineRecordViewModel
@@ -34,6 +35,7 @@ class RecordFragment : Fragment(R.layout.fragment_record) {
 
         val items = listOf("Low", "Medium", "High")
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
+        navController = Navigation.findNavController(view)
 
         setObserver()
 
@@ -80,8 +82,13 @@ class RecordFragment : Fragment(R.layout.fragment_record) {
 
     private fun setObserver() {
         viewModel.createReqStatus.observe(this) {
-            if (it == null || it::class.simpleName == "Record")
+            if (it == null) {
+                Log.d("TAG", "setObserver: NULL is received")
+            } else if (it::class.simpleName == "Record") {
                 binding.predictProgress.visibility = View.INVISIBLE
+                val action = RecordFragmentDirections.actionRecordFragmentToDashboardFragment(it)
+                navController.navigate(action)
+            }
         }
     }
 

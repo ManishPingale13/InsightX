@@ -3,6 +3,7 @@ package com.example.insightx.data.retrofit.model
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
+@Suppress("DEPRECATED_ANNOTATION")
 @Parcelize
 data class Record(
     val id: Int? = null,
@@ -17,5 +18,6 @@ data class Record(
     val quality: Int?,
     val predictions: List<List<Double>>? = null,
     val status: String?,
-    val model: String?
+    val model: String?,
+    val timestamp:String?
 ):Parcelable

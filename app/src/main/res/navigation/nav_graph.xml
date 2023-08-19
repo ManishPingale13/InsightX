@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_homeFragment_to_recordFragment"
             app:destination="@id/recordFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_dashboardFragment2"
+            app:destination="@id/dashboardFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"

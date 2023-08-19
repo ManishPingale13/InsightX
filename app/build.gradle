@@ -6,6 +6,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -22,6 +23,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,8 +53,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    //Graphs
-    implementation 'com.github.AnyChart:AnyChart-Android:1.1.5'
+    //JSON
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
 
 
     //Swipe Refresh Layout
@@ -67,12 +69,14 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:2.6.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
 
-
     //coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
     // Navigation Component
+
+    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-fragment-ktx:2.6.0"
+    //noinspection GradleDependency
     implementation "androidx.navigation:navigation-ui-ktx:2.6.0"
 
     // Dagger Hilt

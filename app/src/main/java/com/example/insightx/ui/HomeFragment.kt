@@ -56,7 +56,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         _binding = FragmentHomeBinding.bind(view)
         navController = Navigation.findNavController(view)
         recordAdapter = RecordAdapter(requireContext()) {
-            val action = RecordFragmentDirections.actionRecordFragmentToDashboardFragment(it)
+            val action = HomeFragmentDirections.actionHomeFragmentToDashboardFragment2(it)
             navController.navigate(action)
         }
 
@@ -165,6 +165,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     binding.progressBarRecords.visibility = View.VISIBLE
                 }
                 is NetworkResult.Success -> {
+                    Log.d("TAG", "fetchRecords: ${it.data!![0]} ")
                     binding.progressBarRecords.visibility = View.INVISIBLE
                     binding.refreshContainer.isRefreshing = false
                     recordList = it.data as MutableList<Record>?

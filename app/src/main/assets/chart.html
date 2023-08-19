@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chart.js in WebView</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<canvas id="myChart"></canvas>
+<canvas id="myChart2"></canvas>
+
+<script>
+      function displayChart(data) {
+        const pieGraph = document.querySelector("#myChart").getContext("2d");
+
+        var opts = {
+          plugins: {
+            legend: {
+              display: true,
+              position: "top",
+              lineWidth: 1,
+            },
+          },
+          scales: {
+            xAxes: [
+              {
+                scaleLabel: {
+                  display: false,
+                },
+                gridLines: {
+                  display: false,
+                  drawBorder: false,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                gridLines: {
+                  display: false,
+                  drawBorder: false,
+                },
+              },
+            ],
+          },
+        };
+
+        const label = JSON.parse(data).label;
+        const predictions = JSON.parse(data).data;
+
+        var myChart = new Chart(pieGraph, {
+          type: "pie",
+          data: {
+            labels: label,
+            datasets: [
+              {
+                data: predictions,
+                backgroundColor: [
+                  "#ffc154",
+                  "orangered",
+                  "#47b39c",
+                  "#4F3F70",
+                  "#1F75FE",
+                ],
+                barThickness: 20,
+                borderRadius: 5,
+                borderWidth: 1,
+                color: "black",
+              },
+            ],
+          },
+          options: opts,
+        });
+      }
+
+</script>
+</body>
+</html>

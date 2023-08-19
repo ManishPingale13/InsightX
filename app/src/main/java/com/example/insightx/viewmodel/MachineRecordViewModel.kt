@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.insightx.data.retrofit.NetworkResult
 import com.example.insightx.data.retrofit.model.Record
-import com.example.insightx.data.retrofit.repository.AuthRepoImpl
 import com.example.insightx.data.retrofit.repository.MachineRecordRepoImpl
 import com.example.insightx.util.DataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +16,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MachineRecordViewModel @Inject constructor(
     private val recordRepo: MachineRecordRepoImpl,
-    private val authRepo: AuthRepoImpl,
     private val dataStoreRepo: DataStoreRepository
 ) : ViewModel() {
 
@@ -101,18 +99,21 @@ class MachineRecordViewModel @Inject constructor(
                     quality = quality,
                     predictions = null,
                     status = null,
-                    model=model
+                    model = model,
+                    timestamp = null
                 )
 
             recordRepo.addMachineRecord(record).collect {
                 when (it) {
                     is NetworkResult.Error -> {
+                        Log.d("TAG", "createMachineRecord: In error!")
                         _createReqStatus.postValue(null)
                     }
                     is NetworkResult.Loading -> {
                         Log.d("TAG", "createMachineRecord: Creating....")
                     }
                     is NetworkResult.Success -> {
+                        Log.d("TAG", "createMachineRecord: In Success!")
                         _createReqStatus.postValue(it.data)
                     }
                 }

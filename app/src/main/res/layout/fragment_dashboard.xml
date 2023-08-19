@@ -1,8 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText">
 
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/purple_500"
+        android:elevation="4dp"
+        app:popupTheme="@style/Widget.Material3.ActionBar.Solid"
+        app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:title="Dashboard" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/label_machine_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_dashboard"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="2dp"
+        android:fontFamily="@font/montserratsemibold"
+        android:text="Machine Details"
+        android:textColor="@color/black"
+        android:textSize="22sp" />
+
+    <!-- Machine Details Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/machine_info_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label_machine_details"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="3dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Machine Name -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/machine_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="Name:"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <!-- Machine Name Value -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/machine_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@+id/machine_name_label"
+                android:fontFamily="@font/montserratregular"
+                android:text="Lathe Machine"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <!-- Machine Status -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/machine_status_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/machine_name_label"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="Status:"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <!-- Machine Status Value -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/machine_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/machine_name"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@+id/machine_status_label"
+                android:fontFamily="@font/montserratregular"
+                android:text="No Failure"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <!-- Machine Timestamp -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/machine_timestamp_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/machine_status"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="Timestamp:"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <!-- Machine Timestamp Value -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/machine_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/machine_status"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_toEndOf="@+id/machine_timestamp_label"
+                android:fontFamily="@font/montserratregular"
+                android:text="2023-08-13"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <!-- Chart Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_chart"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_below="@id/machine_info_card"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp">
+
+        <WebView
+            android:id="@+id/chart_web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </com.google.android.material.card.MaterialCardView>
 
 
 </RelativeLayout>
